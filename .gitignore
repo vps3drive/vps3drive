@@ -1,0 +1,18 @@
+# Build outputs
+**/bin/
+**/obj/
+**/target/
+**/publish/
+_releases/
+
+# IDE & temp
+.vs/
+*.user
+*.suo
+*.log
+*.tmp
+TestResults/
+*.WebView2/
+
+# Bundled installer dependencies (downloaded/copied at package time)
+**/installer/deps/
