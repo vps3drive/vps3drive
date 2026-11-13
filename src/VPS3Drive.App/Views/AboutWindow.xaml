@@ -1,0 +1,25 @@
+<Window x:Class="VPS3Drive.App.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About VPS3Drive" Height="240" Width="420"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="{StaticResource WindowBackgroundBrush}" FontFamily="Segoe UI">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <Image Source="pack://application:,,,/Resources/vps3drive.ico" Width="48" Height="48" Margin="0,0,12,0" />
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="VPS3Drive" FontSize="22" FontWeight="SemiBold" Foreground="#1F2937" />
+                    <TextBlock x:Name="VersionText" Text="Version 1.0.0 — Open Source Windows S3 Drive Client" Margin="0,2,0,0" Foreground="{StaticResource MutedTextBrush}" />
+                </StackPanel>
+            </StackPanel>
+            <TextBlock Text="Mount Amazon S3 and S3-compatible buckets as Windows Network or Removable Drives using WinFsp." TextWrapping="Wrap" />
+            <TextBlock Text="Built on .NET 8 WPF + AWS SDK for .NET + WinFsp." Margin="0,10,0,0" Foreground="{StaticResource MutedTextBrush}" />
+        </StackPanel>
+        <Button Grid.Row="1" Content="OK" IsDefault="True" IsCancel="True" HorizontalAlignment="Right" Style="{StaticResource PrimaryButtonStyle}" />
+    </Grid>
+</Window>

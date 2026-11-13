@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>VPS3Drive</AssemblyName>
+    <ApplicationIcon>Resources\vps3drive.ico</ApplicationIcon>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="Resources\vps3drive.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VPS3Drive.Core\VPS3Drive.Core.csproj" />
+    <ProjectReference Include="..\VPS3Drive.Storage\VPS3Drive.Storage.csproj" />
+    <ProjectReference Include="..\VPS3Drive.FileSystem\VPS3Drive.FileSystem.csproj" />
+  </ItemGroup>
+</Project>

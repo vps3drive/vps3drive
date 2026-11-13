@@ -1,0 +1,190 @@
+<Window x:Class="VPS3Drive.App.OptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="VPS3Drive Options" Height="500" Width="620" MinWidth="560" MinHeight="440"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource WindowBackgroundBrush}" FontFamily="Segoe UI">
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TabControl Grid.Row="0" Background="White" TabStripPlacement="Left">
+            <TabItem Header="General" Padding="10,6">
+                <ScrollViewer Padding="14" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <GroupBox Header="File Transfer Settings">
+                            <StackPanel>
+                                <CheckBox x:Name="MultipartUploadBox" Content="Enable multipart uploads with part size (MB):" IsChecked="True" Margin="0,2,0,4" />
+                                <TextBox x:Name="MultipartUploadSizeBox" Width="80" HorizontalAlignment="Left" Margin="20,0,0,8" Height="24" Padding="4,0" />
+                                <CheckBox x:Name="MultipartDownloadBox" Content="Enable multipart downloads with part size (MB):" IsChecked="True" Margin="0,0,0,4" />
+                                <TextBox x:Name="MultipartDownloadSizeBox" Width="80" HorizontalAlignment="Left" Margin="20,0,0,8" Height="24" Padding="4,0" />
+                                <CheckBox x:Name="InheritAclBox" Content="Inherit permissions from parent bucket" Margin="0,0,0,6" />
+                                <CheckBox x:Name="PreserveAclBox" Content="Preserve permissions when overwriting existing files" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Startup">
+                            <StackPanel>
+                                <CheckBox x:Name="StartWithWindowsBox" Content="Start VPS3Drive automatically when Windows starts" Margin="0,2,0,6" />
+                                <CheckBox x:Name="AutoMountStartupBox" Content="Auto-mount configured drives on startup" Margin="0,0,0,6" />
+                                <CheckBox x:Name="CheckUpdatesBox" Content="Check for updates automatically" />
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Proxy" Padding="10,6">
+                <StackPanel Margin="14">
+                    <GroupBox Header="Proxy Configuration">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Proxy mode:" VerticalAlignment="Center" />
+                            <ComboBox x:Name="ProxyModeBox" Grid.Row="0" Grid.Column="1" Height="26">
+                                <ComboBoxItem Content="No Proxy" Tag="NoProxy" />
+                                <ComboBoxItem Content="Use System Proxy" Tag="SystemProxy" />
+                                <ComboBoxItem Content="Manual Proxy" Tag="ManualProxy" />
+                            </ComboBox>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Proxy server:" VerticalAlignment="Center" />
+                            <TextBox x:Name="ProxyServerBox" Grid.Row="2" Grid.Column="1" Height="26" Padding="4,0" />
+
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Proxy port:" VerticalAlignment="Center" />
+                            <TextBox x:Name="ProxyPortBox" Grid.Row="4" Grid.Column="1" Width="100" HorizontalAlignment="Left" Height="26" Padding="4,0" />
+
+                            <CheckBox x:Name="ProxyAuthBox" Grid.Row="6" Grid.Column="1" Content="Proxy server requires authentication" />
+
+                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Proxy username:" VerticalAlignment="Center" />
+                            <TextBox x:Name="ProxyUserBox" Grid.Row="8" Grid.Column="1" Height="26" Padding="4,0" />
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Bandwidth Throttling" Padding="10,6">
+                <StackPanel Margin="14">
+                    <GroupBox Header="Bandwidth Throttling">
+                        <StackPanel>
+                            <CheckBox x:Name="ThrottleUploadBox" Content="Limit upload speed per thread (KB/s):" Margin="0,2,0,4" />
+                            <TextBox x:Name="MaxUploadBox" Width="100" HorizontalAlignment="Left" Margin="20,0,0,10" Height="24" Padding="4,0" />
+                            <CheckBox x:Name="ThrottleDownloadBox" Content="Limit download speed per thread (KB/s):" Margin="0,0,0,4" />
+                            <TextBox x:Name="MaxDownloadBox" Width="100" HorizontalAlignment="Left" Margin="20,0,0,4" Height="24" Padding="4,0" />
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Data Integrity" Padding="10,6">
+                <StackPanel Margin="14">
+                    <GroupBox Header="Data Integrity">
+                        <StackPanel>
+                            <CheckBox x:Name="VerifyUploadBox" Content="Verify MD5/ETag checksums after upload" Margin="0,2,0,8" />
+                            <CheckBox x:Name="VerifyDownloadBox" Content="Verify MD5/ETag checksums after download" />
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Queueing" Padding="10,6">
+                <StackPanel Margin="14">
+                    <GroupBox Header="Queueing &amp; Retries">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Max concurrent uploads:" VerticalAlignment="Center" />
+                            <TextBox x:Name="MaxUploadsBox" Grid.Row="0" Grid.Column="1" Height="24" Padding="4,0" />
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Max concurrent downloads:" VerticalAlignment="Center" />
+                            <TextBox x:Name="MaxDownloadsBox" Grid.Row="2" Grid.Column="1" Height="24" Padding="4,0" />
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Retry count on error:" VerticalAlignment="Center" />
+                            <TextBox x:Name="RetryCountBox" Grid.Row="4" Grid.Column="1" Height="24" Padding="4,0" />
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Interface &amp; Logging" Padding="10,6">
+                <StackPanel Margin="14">
+                    <GroupBox Header="Interface">
+                        <StackPanel>
+                            <CheckBox x:Name="MinimizeTrayBox" Content="Minimize to system tray" Margin="0,2,0,6" />
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Logging and Error Handling">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="140" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Log level:" VerticalAlignment="Center" />
+                            <ComboBox x:Name="LogLevelBox" Grid.Row="0" Grid.Column="1" Height="26">
+                                <ComboBoxItem Content="Error" />
+                                <ComboBoxItem Content="Warning" />
+                                <ComboBoxItem Content="Info" />
+                                <ComboBoxItem Content="Debug" />
+                            </ComboBox>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Log retention (days):" VerticalAlignment="Center" />
+                            <TextBox x:Name="LogRetentionBox" Grid.Row="2" Grid.Column="1" Height="24" Padding="4,0" />
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Advanced" Padding="10,6">
+                <StackPanel Margin="14">
+                    <GroupBox Header="File System &amp; Network">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="S3 request timeout (seconds):" VerticalAlignment="Center" />
+                            <TextBox x:Name="TimeoutBox" Grid.Row="0" Grid.Column="1" Height="24" Padding="4,0" />
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Read buffer size (KB):" VerticalAlignment="Center" />
+                            <TextBox x:Name="ReadBufferBox" Grid.Row="2" Grid.Column="1" Height="24" Padding="4,0" />
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="OK" IsDefault="True" Style="{StaticResource PrimaryButtonStyle}" Click="Ok_Click" />
+            <Button Content="Cancel" IsCancel="True" Style="{StaticResource DialogButtonStyle}" />
+        </StackPanel>
+    </Grid>
+</Window>

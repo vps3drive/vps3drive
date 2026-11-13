@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ dotnet, main, master ]
+  pull_request:
+    branches: [ dotnet, main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore VPS3Drive.sln
+
+      - name: Build
+        run: dotnet build VPS3Drive.sln --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test tests/VPS3Drive.Core.Tests/VPS3Drive.Core.Tests.csproj --no-build --configuration Release
