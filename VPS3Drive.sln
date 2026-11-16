@@ -1,0 +1,50 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPS3Drive.Core", "src\VPS3Drive.Core\VPS3Drive.Core.csproj", "{808F5C50-A4A1-4B26-9B38-3007F9DDAA12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPS3Drive.Storage", "src\VPS3Drive.Storage\VPS3Drive.Storage.csproj", "{9D13D702-5F0E-4A75-BB37-E22D1710CD19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPS3Drive.FileSystem", "src\VPS3Drive.FileSystem\VPS3Drive.FileSystem.csproj", "{3E8AB68C-2864-40B4-86C2-9D078E3673F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPS3Drive.App", "src\VPS3Drive.App\VPS3Drive.App.csproj", "{108706F2-28DA-422E-969B-F54067CE9B37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPS3Drive.Core.Tests", "tests\VPS3Drive.Core.Tests\VPS3Drive.Core.Tests.csproj", "{A7C4774B-D3AE-4BBF-B8D2-78C5B14E34D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{808F5C50-A4A1-4B26-9B38-3007F9DDAA12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{808F5C50-A4A1-4B26-9B38-3007F9DDAA12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{808F5C50-A4A1-4B26-9B38-3007F9DDAA12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{808F5C50-A4A1-4B26-9B38-3007F9DDAA12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D13D702-5F0E-4A75-BB37-E22D1710CD19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D13D702-5F0E-4A75-BB37-E22D1710CD19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D13D702-5F0E-4A75-BB37-E22D1710CD19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D13D702-5F0E-4A75-BB37-E22D1710CD19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E8AB68C-2864-40B4-86C2-9D078E3673F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E8AB68C-2864-40B4-86C2-9D078E3673F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E8AB68C-2864-40B4-86C2-9D078E3673F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E8AB68C-2864-40B4-86C2-9D078E3673F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{108706F2-28DA-422E-969B-F54067CE9B37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{108706F2-28DA-422E-969B-F54067CE9B37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{108706F2-28DA-422E-969B-F54067CE9B37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{108706F2-28DA-422E-969B-F54067CE9B37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7C4774B-D3AE-4BBF-B8D2-78C5B14E34D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7C4774B-D3AE-4BBF-B8D2-78C5B14E34D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7C4774B-D3AE-4BBF-B8D2-78C5B14E34D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7C4774B-D3AE-4BBF-B8D2-78C5B14E34D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{108706F2-28DA-422E-969B-F54067CE9B37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{108706F2-28DA-422E-969B-F54067CE9B37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{108706F2-28DA-422E-969B-F54067CE9B37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{108706F2-28DA-422E-969B-F54067CE9B37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7C4774B-D3AE-4BBF-B8D2-78C5B14E34D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7C4774B-D3AE-4BBF-B8D2-78C5B14E34D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7C4774B-D3AE-4BBF-B8D2-78C5B14E34D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7C4774B-D3AE-4BBF-B8D2-78C5B14E34D7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

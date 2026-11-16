@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VPS3Drive.Core\VPS3Drive.Core.csproj" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.104.8" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+</Project>

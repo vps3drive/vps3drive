@@ -1,0 +1,39 @@
+<Window x:Class="VPS3Drive.App.HttpHeadersWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Default HTTP Headers" Height="420" Width="640"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource WindowBackgroundBrush}" FontFamily="Segoe UI">
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Configure default HTTP headers applied automatically when uploading files." Margin="0,0,0,8" Foreground="{StaticResource MutedTextBrush}" />
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Content="Add new header..." Style="{StaticResource DialogButtonStyle}" Margin="0,0,6,0" Click="Add_Click" />
+            <Button x:Name="DeleteButton" Content="Delete selected" Style="{StaticResource DialogButtonStyle}" Click="Delete_Click" />
+        </StackPanel>
+
+        <DataGrid x:Name="HeadersGrid" Grid.Row="2"
+                  AutoGenerateColumns="False" CanUserAddRows="False"
+                  HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                  Background="White" BorderBrush="{StaticResource BorderBrushLight}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Bucket" Binding="{Binding BucketPattern}" Width="*" />
+                <DataGridTextColumn Header="File mask" Binding="{Binding FileMask}" Width="*" />
+                <DataGridTextColumn Header="Header" Binding="{Binding HeaderName}" Width="*" />
+                <DataGridTextColumn Header="Value" Binding="{Binding HeaderValue}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="OK" IsDefault="True" Style="{StaticResource PrimaryButtonStyle}" Click="Ok_Click" />
+            <Button Content="Cancel" IsCancel="True" Style="{StaticResource DialogButtonStyle}" />
+        </StackPanel>
+    </Grid>
+</Window>

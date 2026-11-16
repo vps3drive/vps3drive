@@ -1,0 +1,84 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'dotnet-v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if ($tag -match '^v(\d+\.\d+\.\d+)') {
+            $ver = $Matches[1]
+          } else {
+            $ver = "1.0.0"
+          }
+          echo "tag=$tag" >> $env:GITHUB_OUTPUT
+          echo "version=$ver" >> $env:GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore VPS3Drive.sln
+
+      - name: Build & Test
+        run: |
+          dotnet build VPS3Drive.sln --no-restore --configuration Release -p:Version=${{ steps.version.outputs.version }}
+          dotnet test tests/VPS3Drive.Core.Tests/VPS3Drive.Core.Tests.csproj --no-build --configuration Release
+
+      - name: Publish win-x64
+        run: |
+          dotnet publish src/VPS3Drive.App/VPS3Drive.App.csproj --configuration Release -r win-x64 --self-contained false -p:DebugType=none -p:DebugSymbols=false -p:Version=${{ steps.version.outputs.version }} -o publish/win-x64
+          New-Item -ItemType Directory -Force -Path "installer\deps" | Out-Null
+          Invoke-WebRequest -Uri "https://github.com/winfsp/winfsp/releases/download/v2.1/winfsp-2.1.25156.msi" -OutFile "installer\deps\winfsp.msi"
+
+      - name: Package Portable Archive
+        id: pkg
+        shell: pwsh
+        run: |
+          $zipName = "VPS3Drive-${{ steps.version.outputs.tag }}-win-x64-portable.zip"
+          Copy-Item "installer\deps\winfsp.msi" "publish\win-x64\winfsp.msi" -Force
+          Compress-Archive -Path publish/win-x64/* -DestinationPath $zipName -Force
+          Remove-Item "publish\win-x64\winfsp.msi" -Force
+          echo "zip=$zipName" >> $env:GITHUB_OUTPUT
+
+      - name: Build Windows Setup Installer
+        id: setup
+        shell: pwsh
+        run: |
+          $iscc = Get-Command iscc -ErrorAction SilentlyContinue
+          if (-not $iscc) {
+            $candidate = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+            if (Test-Path $candidate) { $iscc = $candidate }
+            else {
+              choco install innosetup -y --no-progress
+              $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+            }
+          }
+          & $iscc "/DMyAppVersion=${{ steps.version.outputs.version }}" "installer\VPS3Drive.iss"
+          echo "exe=VPS3Drive-Setup-v${{ steps.version.outputs.version }}.exe" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ steps.pkg.outputs.zip }}
+            ${{ steps.setup.outputs.exe }}
+          generate_release_notes: true

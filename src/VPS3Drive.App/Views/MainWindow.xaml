@@ -1,0 +1,179 @@
+<Window x:Class="VPS3Drive.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="VPS3Drive" Icon="pack://application:,,,/Resources/vps3drive.ico" Height="680" Width="1020" MinHeight="520" MinWidth="780"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource WindowBackgroundBrush}" FontFamily="Segoe UI">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0" Background="#FFFFFF" BorderBrush="{StaticResource BorderBrushLight}" BorderThickness="0,0,0,1" Padding="2,2">
+            <MenuItem Header="_File">
+                <MenuItem Header="E_xit" Click="Exit_Click" />
+            </MenuItem>
+            <MenuItem Header="_Accounts">
+                <MenuItem Header="Add new account..." Click="AddAccount_Click" />
+                <MenuItem Header="Manage accounts..." Click="ManageAccounts_Click" />
+            </MenuItem>
+            <MenuItem Header="_Drives">
+                <MenuItem Header="Add new drive..." Click="AddDrive_Click" />
+                <MenuItem x:Name="MenuEditDrive" Header="Edit selected drive..." Click="EditDrive_Click" />
+                <MenuItem x:Name="MenuDeleteDrive" Header="Delete selected drive" Click="DeleteDrive_Click" />
+                <Separator />
+                <MenuItem x:Name="MenuMountDrive" Header="Mount / Start drive" Click="MountDrive_Click" />
+                <MenuItem x:Name="MenuUnmountDrive" Header="Unmount / Stop drive" Click="UnmountDrive_Click" />
+                <MenuItem x:Name="MenuOpenExplorer" Header="Open in Windows Explorer" Click="OpenExplorer_Click" />
+            </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem x:Name="MenuToggleService" Header="Stop VPS3Drive Service" Click="ToggleService_Click" />
+                <MenuItem Header="_Event Log" Click="ShowEventLog_Click" />
+                <MenuItem Header="Default HTTP Headers..." Click="HttpHeaders_Click" />
+                <Separator />
+                <MenuItem Header="_Options..." Click="Options_Click" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Online help..." Click="OnlineHelp_Click" />
+                <MenuItem Header="Check for _updates..." Click="CheckUpdates_Click" />
+                <Separator />
+                <MenuItem Header="About VPS3Drive..." Click="About_Click" />
+            </MenuItem>
+        </Menu>
+
+        <!-- Toolbar -->
+        <Border Grid.Row="1" Background="#FAFAFA" BorderBrush="{StaticResource BorderBrushLight}" BorderThickness="0,0,0,1" Padding="8,5">
+            <WrapPanel>
+                <Button Style="{StaticResource ToolbarButtonStyle}" Click="AddDrive_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="+" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,6,0" />
+                        <TextBlock Text="Add New Mapped Drive" FontWeight="SemiBold" />
+                    </StackPanel>
+                </Button>
+                <Border Width="1" Height="18" Background="#D4D4D4" Margin="6,2" VerticalAlignment="Center" />
+                <Button x:Name="BtnEditDrive" Style="{StaticResource ToolbarButtonStyle}" Content="Edit" Click="EditDrive_Click" />
+                <Button x:Name="BtnDeleteDrive" Style="{StaticResource ToolbarButtonStyle}" Content="Delete" Click="DeleteDrive_Click" />
+                <Border Width="1" Height="18" Background="#D4D4D4" Margin="6,2" VerticalAlignment="Center" />
+                <Button x:Name="BtnMountDrive" Style="{StaticResource ToolbarButtonStyle}" Content="Mount" Click="MountDrive_Click" />
+                <Button x:Name="BtnUnmountDrive" Style="{StaticResource ToolbarButtonStyle}" Content="Unmount" Click="UnmountDrive_Click" />
+                <Button x:Name="BtnOpenExplorer" Style="{StaticResource ToolbarButtonStyle}" Content="Open in Explorer" Click="OpenExplorer_Click" />
+                <Border Width="1" Height="18" Background="#D4D4D4" Margin="6,2" VerticalAlignment="Center" />
+                <Button Style="{StaticResource ToolbarButtonStyle}" Content="Accounts" Click="ManageAccounts_Click" />
+                <Button Style="{StaticResource ToolbarButtonStyle}" Content="Options" Click="Options_Click" />
+                <Button Style="{StaticResource ToolbarButtonStyle}" Content="Refresh" Click="Refresh_Click" />
+                <Button x:Name="BtnVersions" Style="{StaticResource ToolbarButtonStyle}" Content="Versions &amp; Trash" Click="Versions_Click" />
+            </WrapPanel>
+        </Border>
+
+        <!-- Workspace: Mapped Drives + Bottom Tabs -->
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" MinHeight="180" />
+                <RowDefinition Height="6" />
+                <RowDefinition Height="*" MinHeight="140" />
+            </Grid.RowDefinitions>
+
+            <!-- Mapped Drives Section -->
+            <Border Grid.Row="0" Background="White" BorderBrush="{StaticResource BorderBrushLight}" BorderThickness="1">
+                <DockPanel>
+                    <Border DockPanel.Dock="Top" Background="#F7F7F7" BorderBrush="{StaticResource BorderBrushLight}" BorderThickness="0,0,0,1" Padding="10,6">
+                        <DockPanel LastChildFill="True">
+                            <TextBlock DockPanel.Dock="Left" Text="Mapped Drives" FontWeight="SemiBold" FontSize="13" Foreground="#1F2937" VerticalAlignment="Center" />
+                            <TextBlock x:Name="DriveSummaryText" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Text="0 mapped drives" Foreground="{StaticResource MutedTextBrush}" FontSize="12" />
+                        </DockPanel>
+                    </Border>
+                    <DataGrid x:Name="DrivesGrid"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              SelectionMode="Single" CanUserAddRows="False"
+                              HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                              Background="White" BorderThickness="0"
+                              RowHeight="28"
+                              SelectionChanged="DrivesGrid_SelectionChanged"
+                              MouseDoubleClick="DrivesGrid_MouseDoubleClick">
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Open in Windows Explorer" Click="OpenExplorer_Click" />
+                                <MenuItem Header="Mount / Start" Click="MountDrive_Click" />
+                                <MenuItem Header="Unmount / Stop" Click="UnmountDrive_Click" />
+                                <Separator />
+                                <MenuItem Header="Edit properties..." Click="EditDrive_Click" />
+                                <MenuItem Header="Delete" Click="DeleteDrive_Click" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Drive Letter" Binding="{Binding DriveLetter}" Width="95" />
+                            <DataGridTextColumn Header="Amazon S3 Bucket" Binding="{Binding Bucket}" Width="2*" />
+                            <DataGridTextColumn Header="Account" Binding="{Binding AccountName}" Width="1.5*" />
+                            <DataGridTextColumn Header="Type" Binding="{Binding DriveType}" Width="1.3*" />
+                            <DataGridTextColumn Header="Volume Label" Binding="{Binding VolumeLabel}" Width="1.2*" />
+                            <DataGridTextColumn Header="Status" Binding="{Binding StatusText}" Width="100" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <GridSplitter Grid.Row="1" Height="6" HorizontalAlignment="Stretch" Background="Transparent" Cursor="SizeNS" />
+
+            <!-- Bottom Tabs: Tasks & Event Log -->
+            <TabControl x:Name="BottomTabs" Grid.Row="2" Background="White" BorderBrush="{StaticResource BorderBrushLight}">
+                <TabItem Header="Tasks / Transfers">
+                    <DataGrid x:Name="TransfersGrid"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              CanUserAddRows="False" HeadersVisibility="Column"
+                              RowHeight="26"
+                              GridLinesVisibility="Horizontal" Background="White" BorderThickness="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="File" Binding="{Binding FileName}" Width="2*" />
+                            <DataGridTextColumn Header="Direction" Binding="{Binding Direction}" Width="90" />
+                            <DataGridTextColumn Header="Target" Binding="{Binding Target}" Width="1.5*" />
+                            <DataGridTextColumn Header="Size" Binding="{Binding SizeText}" Width="90" />
+                            <DataGridTextColumn Header="Progress" Binding="{Binding ProgressText}" Width="90" />
+                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="110" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem x:Name="EventLogTab" Header="Event Log">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#F7F7F7" Margin="0,0,0,2">
+                            <Button Content="Clear Event Log" Style="{StaticResource ToolbarButtonStyle}" Click="ClearLog_Click" />
+                            <Button Content="Save Event Log..." Style="{StaticResource ToolbarButtonStyle}" Click="SaveLog_Click" />
+                        </StackPanel>
+                        <DataGrid x:Name="EventLogGrid"
+                                  AutoGenerateColumns="False" IsReadOnly="True"
+                                  CanUserAddRows="False" HeadersVisibility="Column"
+                                  RowHeight="26"
+                                  GridLinesVisibility="Horizontal" Background="White" BorderThickness="0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Time" Binding="{Binding FormattedTime}" Width="145" />
+                                <DataGridTextColumn Header="Level" Binding="{Binding Level}" Width="75" />
+                                <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="100" />
+                                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="3" Background="{StaticResource StatusBarBackgroundBrush}" BorderBrush="{StaticResource BorderBrushLight}" BorderThickness="0,1,0,0" Padding="6,2">
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="VPS3Drive Service Status: " Foreground="#374151" />
+                    <TextBlock x:Name="ServiceStatusText" Text="Running" FontWeight="SemiBold" Foreground="#0E7A0D" Cursor="Hand" MouseLeftButtonUp="ServiceStatus_Click" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <TextBlock x:Name="WinFspStatusText" Text="WinFsp: Checking..." Foreground="{StaticResource MutedTextBrush}" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right" Margin="0,0,8,0">
+                <TextBlock Text="Show event log" Foreground="{StaticResource AccentBrush}" TextDecorations="Underline" Cursor="Hand" MouseLeftButtonUp="ShowEventLog_Click" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

@@ -1,0 +1,79 @@
+<Window x:Class="VPS3Drive.App.Views.VersionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="S3 Versioning &amp; Trash Recovery"
+        Width="780" Height="520"
+        WindowStartupLocation="CenterOwner"
+        Background="#F3F3F3">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TabControl x:Name="MainTabs">
+            <TabItem Header="S3 Versions">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Margin="0,0,0,8">
+                        <Button DockPanel.Dock="Right" Content="Load Versions" Padding="12,4" Margin="8,0,0,0" Click="LoadVersions_Click"/>
+                        <TextBox x:Name="PrefixFilterBox" VerticalContentAlignment="Center" Padding="6,4" ToolTip="Key or prefix filter"/>
+                    </DockPanel>
+
+                    <DataGrid x:Name="VersionsGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Key" Binding="{Binding Key}" Width="*"/>
+                            <DataGridTextColumn Header="Version ID" Binding="{Binding VersionId}" Width="150"/>
+                            <DataGridTextColumn Header="Size" Binding="{Binding Size}" Width="90"/>
+                            <DataGridTextColumn Header="Modified" Binding="{Binding LastModified}" Width="145"/>
+                            <DataGridTextColumn Header="State" Binding="{Binding StateLabel}" Width="95"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <Button Content="Restore / Undelete Selected" Padding="12,4" Margin="0,0,8,0" Click="RestoreVersion_Click"/>
+                        <Button Content="Delete Version" Padding="12,4" Click="DeleteVersion_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Trash (.trash/)">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,8">
+                        <Button Content="Refresh Trash" Padding="12,4" Margin="0,0,8,0" Click="LoadTrash_Click"/>
+                        <Button Content="Empty Trash" Padding="12,4" Click="EmptyTrash_Click"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="TrashGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Trash Item" Binding="{Binding DisplayName}" Width="*"/>
+                            <DataGridTextColumn Header="Original Path" Binding="{Binding OriginalKey}" Width="*"/>
+                            <DataGridTextColumn Header="Size" Binding="{Binding Size}" Width="90"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <Button Content="Restore Selected" Padding="12,4" Margin="0,0,8,0" Click="RestoreTrash_Click"/>
+                        <Button Content="Delete Permanently" Padding="12,4" Click="DeleteTrash_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <DockPanel Grid.Row="1" Margin="0,10,0,0">
+            <TextBlock x:Name="StatusText" VerticalAlignment="Center" Foreground="#555" Text="Ready"/>
+            <Button DockPanel.Dock="Right" Content="Close" Width="80" Padding="8,4" IsCancel="True"/>
+        </DockPanel>
+    </Grid>
+</Window>
