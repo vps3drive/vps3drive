@@ -1,0 +1,79 @@
+name: Release (Rust)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust gnullvm toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable-x86_64-pc-windows-gnullvm
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if ($tag -match '^v(\d+\.\d+\.\d+)') {
+            $ver = $Matches[1]
+          } else {
+            $ver = "1.0.0"
+          }
+          echo "tag=$tag" >> $env:GITHUB_OUTPUT
+          echo "version=$ver" >> $env:GITHUB_OUTPUT
+
+      - name: Install WinFsp SDK
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "installer\deps" | Out-Null
+          Invoke-WebRequest -Uri "https://github.com/winfsp/winfsp/releases/download/v2.1/winfsp-2.1.25156.msi" -OutFile "installer\deps\winfsp.msi"
+          Start-Process msiexec.exe -ArgumentList "/i installer\deps\winfsp.msi /qn /norestart" -Wait
+
+      - name: Build & Package
+        id: pkg
+        shell: pwsh
+        run: |
+          $llvmBin = "C:\Program Files\LLVM\bin"
+          if (Test-Path $llvmBin) { $env:LIBCLANG_PATH = $llvmBin }
+          cargo build --release
+          New-Item -ItemType Directory -Force -Path "publish\win-x64" | Out-Null
+          Copy-Item "target\release\vps3drive-rust.exe" "publish\win-x64\" -Force
+          Copy-Item "C:\Program Files (x86)\WinFsp\bin\winfsp-x64.dll" "publish\win-x64\" -Force
+
+          $zipName = "VPS3Drive-Rust-${{ steps.version.outputs.tag }}-win-x64-portable.zip"
+          Copy-Item "installer\deps\winfsp.msi" "publish\win-x64\winfsp.msi" -Force
+          Compress-Archive -Path publish/win-x64/* -DestinationPath $zipName -Force
+          Remove-Item "publish\win-x64\winfsp.msi" -Force
+          echo "zip=$zipName" >> $env:GITHUB_OUTPUT
+
+      - name: Build Windows Setup Installer
+        id: setup
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) {
+            choco install innosetup -y --no-progress
+          }
+          & $iscc "/DMyAppVersion=${{ steps.version.outputs.version }}" "installer\VPS3Drive-Rust.iss"
+          echo "exe=VPS3Drive-Rust-Setup-v${{ steps.version.outputs.version }}.exe" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ steps.pkg.outputs.zip }}
+            ${{ steps.setup.outputs.exe }}
+          generate_release_notes: true
